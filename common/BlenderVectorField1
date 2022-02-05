@@ -1,0 +1,19 @@
+from math import sqrt, cos, sin, pi, radians, degrees
+from Vector import *
+import Curve
+import bpy, mathutils
+
+def PointsToAction(List_of_Data = [], action=None, res = 250):
+    locx = action.fcurves.new(data_path="location", index=0)
+    locy = action.fcurves.new(data_path="location", index=1)
+    locz = action.fcurves.new(data_path="location", index=2)
+    locx.keyframe_points.add(res)
+    locy.keyframe_points.add(res)
+    locz.keyframe_points.add(res)
+	for i in range(len(List_of_Data)):
+   		obj.location[1] = obj.location[1]+List_of_Data[i][1]
+    	obj.location[2] = obj.location[2]+List_of_Data[i][2]
+    	obj.location[0] = obj.location[0]+List_of_Data[i][0]
+    	obj.keyframe_insert(data_path="location", frame=i*5, index=0)
+    	obj.keyframe_insert(data_path="location", frame=i*5, index=1)
+    	obj.keyframe_insert(data_path="location", frame=i*5, index=2)

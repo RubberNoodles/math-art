@@ -1,0 +1,68 @@
+
+/* Initial parameterization */
+id : "MyCurveTest";
+t0:0;
+t1:float(2*%pi - 0.001);
+
+/*Input Parametrization in Standard Coordinate System*/
+
+load("./building/params.mac");
+
+cyclic:"False";
+unitSpeed : "True";
+planar : "False";
+
+/*Show or hide Frenet-Serret frame*/
+showFrenet : "True";
+/*Show inset view of camera following probe*/
+showInset : "True";
+/*Show or hide frame number*/
+showFrameNo : "False";
+/*Show or hide curvature/torsion*/
+showCurvatureTorsion : "False";
+/*Scale up or down to fit the curve in the rendering*/
+scale : "1.0";
+/* Curve resolution/smoothness (no. of samples along curve)*/
+curveRes : "1000";
+/* Curve radius*/
+radius : "0.05";
+/*# Radial resolution*/
+radRes : "4";
+/*# Show or hide osculating (T-N) plane*/
+showOsculating : "True";
+/*# Show or hide rectifying (T-B) plane*/
+showRectifying : "False";
+/*# Show or hide normal (N-B) plane*/
+showNormalPlane : "False";
+/*# Binormal up? If false, normal is up*/
+binormalUp : "True";
+
+define(dx(t), diff(x0(t), t));
+define(dy(t), diff(y0(t), t));
+define(dz(t), diff(z0(t), t));
+
+define(ddx(t), diff(dx(t), t));
+define(ddy(t), diff(dy(t), t));
+define(ddz(t), diff(dz(t), t));
+
+interval:float(2*%pi/79);
+
+data:[];
+dataderivOne:[];
+dataderivTwo:[];
+red:[];
+green:[];
+blue:[];
+
+/* Loop through each domain and append corresponding data */
+for a: t0 thru t1 step interval do data:append(data,[float([x0(a),y0(a),z0(a)])]);
+for a: t0 thru t1 step interval do dataderivOne:append(dataderivOne,[float([dx(a),dy(a),dz(a)])]);
+for a: t0 thru t1 step interval do dataderivTwo:append(dataderivTwo,[float([ddx(a),ddy(a),ddz(a)])]);
+for a: t0 thru t1 step interval do red:append(red,[[red_func0(a)]]);
+for a: t0 thru t1 step interval do green:append(green,[[green_func0(a)]]);
+for a: t0 thru t1 step interval do blue:append(blue,[[blue_func0(a)]]);
+
+steps_var : length(data);
+vars:[valueList,deriv1List,deriv2List,redList,greenList,blueList];
+write_data([vars,[name,id,steps,steps_var,col,col_id],data,dataderivOne,dataderivTwo,red,green,blue], "building/curve_data/curve0.txt",comma);
+

@@ -1,0 +1,30 @@
+#!/usr/bin/env maple -q
+
+restart:
+
+with(Maplets[Elements]):
+
+
+printf("#"):
+
+
+textinput := Maplet(
+
+    # Label the Maplet application title bar.
+    Window( 'title' = "Enter custom texts",
+
+        [
+            BoxCell( "Input up to 5 custom 3D text to be displayed:" ),
+
+            TextField['TF1'](),
+            
+            Button( "OK", Shutdown( ['TF1'] )),
+            Button( "Cancel", Shutdown())
+        ]
+    )):
+
+
+texts := Maplets[Display](textinput):
+
+printf("def text():\n"):
+printf("    return \"%s\"\n",texts[1]):

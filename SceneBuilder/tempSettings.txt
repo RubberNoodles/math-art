@@ -1,0 +1,1 @@
+/Applications/Blender.app/Contents/MacOS/Blender@@@/opt/homebrew/bin/maxima@@@/Users/seesea/Documents/Coding-Projects/MathArt/SceneBuilder/building/MySurfaceTest.blend

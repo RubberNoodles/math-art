@@ -1,0 +1,152 @@
+
+/* Default values if none are given */
+red_func(u,v):=0.5;
+green_func(u,v):=0.7;
+blue_func(u,v):=0.5;
+u0:0;
+u1:%pi;
+v0:-%pi;
+v1:%pi;
+
+/*Initial Value Input, be explicit for now*/
+file_search_maxima: append(file_search_maxima, ["/Users/seesea/Documents/Coding-Projects/AlphaOmega/peschke/SceneBuilder/building/$$$.mac"]);
+load("params.mac");
+
+/*Domain Setting*/
+
+u0:float(u0);
+u1:float(u1);
+v0:float(v0);
+v1:float(v1);
+interval:0.08;
+
+
+/*Basic Settings*/
+scale : "6.0";
+uCyclic : "False";
+vCyclic : "True";
+resu : 1+floor(float((u1-u0)/interval)); /*"im.size[0]"Use image size setting*/ /* "im.size[1]"*/
+
+/*Calculate Derivatives here*/
+/*U derivatives*/
+define(dux(u, v), diff(x(u,v), u));
+define(duy(u, v), diff(y(u, v), u));
+define(duz(u, v), diff(z(u, v), u));
+
+define(ddux(u, v), diff(dux(u, v), u));
+define(dduy(u, v), diff(duy(u, v), u));
+define(dduz(u, v), diff(duz(u, v), u));
+
+define(dddux(u, v), diff(ddux(u,v), u));
+define(ddduy(u, v), diff(dduy(u,v), u));
+define(ddduz(u, v), diff(dduz(u,v), u));
+
+/*Calculate Derivatives here*/
+/*V derivatives*/
+define(dvx(u, v), diff(x(u,v), v));
+define(dvy(u, v), diff(y(u, v), v));
+define(dvz(u, v), diff(z(u, v), v));
+
+define(ddvx(u, v), diff(dvx(u, v), v));
+define(ddvy(u, v), diff(dvy(u, v), v));
+define(ddvz(u, v), diff(dvz(u, v), v));
+
+define(dddvx(u, v), diff(ddvx(u,v), v));
+define(dddvy(u, v), diff(ddvy(u,v), v));
+define(dddvz(u, v), diff(ddvz(u,v), v));
+
+
+fpprec:3;
+
+/* Translate everything to ListData */
+/* Starts with u */
+
+data:[];
+udataDerivOne:[];
+udataDerivTwo:[];
+udataDerivThree:[];
+
+/* Each row of the array is a given value of u, then iterated over all possible v: i.e. XCoordinateLine*/
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v:v0 thru v1 step interval do temp:append(temp,[[x(u,v),y(u,v),z(u,v)]]),
+    data:append(data,[temp])
+);
+
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v: v0 thru v1 step interval do temp:append(temp,[[dux(u,v),duy(u,v),duz(u,v)]]),
+    udataDerivOne:append(udataDerivOne,[temp])
+);
+
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v: v0 thru v1 step interval do temp:append(temp,[[ddux(u,v),dduy(u,v),dduz(u,v)]]),
+    udataDerivTwo:append(udataDerivTwo,[temp])
+);
+
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v: v0 thru v1 step interval do temp:append(temp,[[dddux(u,v),ddduy(u,v),ddduz(u,v)]]),
+    udataDerivThree:append(udataDerivThree,[temp])
+);
+/* VCoordinateList, not udata=vdata */
+
+vdataDerivOne:[];
+vdataDerivTwo:[];
+vdataDerivThree:[];
+
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v: v0 thru v1 step interval do temp:append(temp,[[dvx(u,v),dvy(u,v),dvz(u,v)]]),
+    vdataDerivOne:append(vdataDerivOne,[temp])
+);
+
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v: v0 thru v1 step interval do temp:append(temp,[[ddvx(u,v),ddvy(u,v),ddvz(u,v)]]),
+    vdataDerivTwo:append(vdataDerivTwo,[temp])
+);
+
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v: v0 thru v1 step interval do temp:append(temp,[[dddvx(u,v),dddvy(u,v),dddvz(u,v)]]),
+    vdataDerivThree:append(vdataDerivThree,[temp])
+);
+
+/* writing data for colours */
+
+red:[];
+green:[];
+blue:[];
+
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v: v0 thru v1 step interval do temp:append(temp,[[red_func(u,v)]]),
+    red:append(red,[temp])
+);
+
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v: v0 thru v1 step interval do temp:append(temp,[[green_func(u,v)]]),
+    green:append(green,[temp])
+);
+
+for u: u0 thru u1 step interval do (
+    temp:[],
+    for v: v0 thru v1 step interval do temp:append(temp,[[blue_func(u,v)]]),
+    blue:append(blue,[temp])
+);
+
+resu: length(data);
+resv: length(data[1]);
+
+vars: [valueList, uDeriv1List, uDeriv2List, uDeriv3List, vDeriv1List, vDeriv2List, vDeriv3List, redList, greenList, blueList];
+params: [uSteps,resu,vSteps,resv,name,id,col,col_id];
+dir: "building/surf_data/";
+/* for surfnum: 0 thru 4 do (
+    write_data([vars, data, udataDerivOne,udataDerivTwo,udataDerivThree, vdataDerivOne,vdataDerivTwo,vdataDerivThree],
+     simplode([dir, "surf", surfnum, ".txt"]), comma)); */
+/* I'll use this ^ after I can automate more stuff */
+write_data([vars, params, data, udataDerivOne,udataDerivTwo,udataDerivThree, vdataDerivOne,vdataDerivTwo,vdataDerivThree, red, green, blue], simplode([dir, file]), comma);
+

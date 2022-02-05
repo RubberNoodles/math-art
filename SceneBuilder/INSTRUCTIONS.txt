@@ -1,0 +1,31 @@
+From Terminal (Darwin), Command Prompt (Windows) or Bash (Linux), cd to this SceneBuilder directory and run
+
+python3 Main.py
+
+A GUI will pop up. There are 4 drawing methods, and 3 modification features.
+
+DRAWING:
+
+Create_Data: *** ALWAYS create_data before trying to draw a curve or surface!!! ***
+Curve: in the first 3 entries, type in a curve paramaterized as (x(t),y(t),z(t)). Supply a name and a colour_id 
+
+Surface: similar, surface is paramterized as (x(u,v),y(u,v),z(u,v)).
+
+Animate Surface: Performs a linear transformation from the first set of surface (f) and the second set surface (g)
+in t steps. i.e. k*f(u,v) + (1-k)*g(u,v) where k = 1/(t-1)
+
+Render: Uses blender rendering engine 'EEVEE' to render the current scene. Currently no animation rendering has been implemented. 
+To view animations and/or models; open building/MySurfaceTest.blend in blender.
+
+MODIFICATION:
+
+Colours: Using the 3 entries on the rightmost side, define a colour function for each point uv in the domain.
+
+Delete Object: delete object from memory (invisible). Does not delete mesh.
+
+Modify Material: Assigns a material to the selected object. Materials are either pre-generated or user-generated.
+
+----
+
+Please let me know if anything wrong shows up!
+
